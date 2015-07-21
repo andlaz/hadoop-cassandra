@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<configuration>
+	<!-- Node Manager daemon -->
+	<property>
+		<name>yarn.resourcemanager.hostname</name>
+		<value><%= @host_resource_manager %></value>
+	</property>
+	<property>
+		<name>yarn.nodemanager.resource.memory-mb</name>
+		<value><%= @node_containers_heap_total %></value>
+	</property>
+</configuration>
