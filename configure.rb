@@ -32,6 +32,7 @@ class Configure < Thor
       :initial_token,
       :data_dirs,
       :commit_log_dir,
+      :saved_caches_dir,
       :listen_address,
       :rpc_address,
       :broadcast_address,
@@ -66,6 +67,7 @@ class Configure < Thor
     :initial_token => {:desc => "Inital token of the node being started. Required if calculate tokens is not set!"},
     :calculate_tokens => {:desc => "If the initial token is not specified, we can calulate murmur3 tokens. Provide node \"sequence\" id in the form of \"node_seq:total_nr_of_nodes\" e.g. 1:2, 2:2 etc"},
     :data_dirs => {:default => "/var/lib/cassandra/data", :desc => "Comma separated list of Cassandra data directories"},
+    :saved_caches_dir => { :default => "/var/lib/cassandra/saved_caches", :desc => "Directory to store caches on disk"},
     :commit_log_dir => {:default => "/var/lib/cassandra/commitlog", :desc => "Directory in to which commit logs will be written"},
     :listen_address => {:required => true, :desc => "Address or interface to bind to and tell other Cassandra nodes to connect to"},
     :rpc_address => {:required => true, :desc => "The address or interface to bind the Thrift RPC service and native transport server to"},
@@ -107,6 +109,7 @@ class Configure < Thor
     configuration.cluster_name = options[:cluster_name]
     configuration.data_dirs = options[:data_dirs].split ','
     configuration.commit_log_dir = options[:commit_log_dir]
+    configuration.saved_caches_dir = options[:saved_caches_dir]
     configuration.listen_address = options[:listen_address]
     configuration.rpc_address = options[:rpc_address]
     configuration.broadcast_address = options[:broadcast_address].nil? ? options[:listen_address] : options[:broadcast_address]
@@ -137,6 +140,16 @@ class Configure < Thor
     File.write '/etc/supervisor/conf.d/cassandra.conf',
       configuration.render_from('/etc/supervisor/conf.d/cassandra.conf.erb')
     
+    `chown -R hadoop #{options[:commit_log_dir]}`
+    `chown -R hadoop #{options[:saved_caches_dir]}`
+    
+    configuration.data_dirs.each do |data_dir| 
+      
+      `chown -R hadoop #{data_dir}`
+    
+    end
+    
+    `chown -R hadoop /var/log/cassandra`
      
   end
   
@@ -162,6 +175,9 @@ class Configure < Thor
     
     FileUtils::mkdir_p options[:tmp_dir] unless File.exists? options[:tmp_dir]
     FileUtils::mkdir_p options[:data_dir] unless File.exists? options[:data_dir]
+    
+    `chown -R hadoop #{options[:tmp_dir]}`
+    `chown -R hadoop #{options[:data_dir]}`
     
   end
   
