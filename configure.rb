@@ -36,7 +36,9 @@ class Configure < Thor
       :listen_address,
       :rpc_address,
       :broadcast_address,
-      :seeds
+      :seeds,
+      :dc,
+      :rack
 
   end
   
@@ -72,7 +74,9 @@ class Configure < Thor
     :listen_address => {:required => true, :desc => "Address or interface to bind to and tell other Cassandra nodes to connect to"},
     :rpc_address => {:required => true, :desc => "The address or interface to bind the Thrift RPC service and native transport server to"},
     :broadcast_address => {:desc => "Address to broadcast to other Cassandra nodes. Leaving this blank will set it to the same value as listen_address"},
-    :seeds => {:required => true, :desc => "Seed node/s"}
+    :seeds => {:required => true, :desc => "Seed node/s"},
+    :dc => {:required => true, :desc => "Name of the Cassandra DC the node will join"},
+    :rack => {:default => "rack1", :desc => "Name of the Rack in the Cassandra DC the node sits on"}
   }
   
   @@datanode_options = {
@@ -114,6 +118,9 @@ class Configure < Thor
     configuration.rpc_address = options[:rpc_address]
     configuration.broadcast_address = options[:broadcast_address].nil? ? options[:listen_address] : options[:broadcast_address]
     configuration.seeds = options[:seeds]
+    configuration.dc = options[:dc]
+    configuration.rack = options[:rack]
+    
     # check if we can get to an initial_token
     
     if options[:initial_token].nil? == false
@@ -136,6 +143,9 @@ class Configure < Thor
     # write configuration file
     File.write '/etc/cassandra/conf/cassandra.yaml',
       configuration.render_from('/etc/cassandra/conf/cassandra.yaml.erb')
+      
+    File.write '/etc/cassandra/conf/cassandra-rackdc.properties',
+      configuration.render_from('/etc/cassandra/conf/cassandra-rackdc.properties.erb')
       
     File.write '/etc/supervisor/conf.d/cassandra.conf',
       configuration.render_from('/etc/supervisor/conf.d/cassandra.conf.erb')
