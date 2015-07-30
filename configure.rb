@@ -133,7 +133,7 @@ class Configure < Thor
       nodes = ((options[:calculate_tokens].split ':')[1]).to_i
       id = ((options[:calculate_tokens].split ':')[0]).to_i
       
-      configuration.initial_token = ((2**64 / nodes) * id) - 2**63
+      configuration.initial_token = ((2**64 / nodes) * id-1) - 2**63
       
       
     else
