@@ -59,6 +59,8 @@ class Configure < Thor
     include ERBRenderer
     
     attr_accessor :host_resource_manager,
+      :web_ui_host,
+      :web_ui_port,
       :node_containers_heap_total
     
   end
@@ -88,7 +90,9 @@ class Configure < Thor
   
   @@nodemanager_options = {
     :resource_manager => { :required => true, :desc => "Host of the YARN ResourceManager" },
-    :node_containers_heap_total => { :required => true, :desc => "Total memory available on the node to launch containers" }
+    :node_containers_heap_total => { :required => true, :desc => "Total memory available on the node to launch containers" },
+    :web_ui_host => { :required => true, :desc => "Node Manager web ui host" },
+    :web_ui_port => { :default => 8042, :desc => "Node Manager web ui port"}
   }  
   
   options @@cassandra_options
@@ -198,6 +202,8 @@ class Configure < Thor
     configuration = YARNNodeManagerConfiguration.new
     configuration.host_resource_manager = options[:resource_manager]
     configuration.node_containers_heap_total = options[:node_containers_heap_total]
+    configuration.web_ui_host = options[:web_ui_host]
+    configuration.web_ui_port = options[:web_ui_port]
     
     File.write '/etc/hadoop/yarn-site.xml',
       configuration.render_from('/etc/hadoop/yarn-site.xml.erb')

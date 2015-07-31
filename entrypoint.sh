@@ -29,7 +29,8 @@ add_datanode_options () {
 add_nodemanager_options () {
 	local opts=""
 	# if --resource-manager is not set, set it to the docker alias host
-	if [ $RESOURCEMANAGER_NAME ] && [ ! "$*" == *"--resource-manager"* ]; then opts="$opts --resource-manager resourcemanager"; fi
+	if [ $RESOURCEMANAGER_NAME ] && [[ "$*" != *"--resource-manager"* ]]; then opts="$opts --resource-manager resourcemanager"; fi
+	if [ $HOSTNAME ] && [[ "$*" != *"--web-ui-host"* ]]; then opts="$opts --web-ui-host $HOSTNAME"; fi
 	
 	echo $opts
 }

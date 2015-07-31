@@ -9,4 +9,8 @@
 		<name>yarn.nodemanager.resource.memory-mb</name>
 		<value><%= @node_containers_heap_total %></value>
 	</property>
+	<property>
+		<name>yarn.nodemanager.webapp.address</name>
+		<value><%= @web_ui_host%>:<%= @web_ui_port%></value>
+	</property>
 </configuration>
