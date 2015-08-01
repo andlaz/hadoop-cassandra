@@ -10,7 +10,27 @@
 		<value><%= @node_containers_heap_total %></value>
 	</property>
 	<property>
+		<name>yarn.nodemanager.bind-host</name>
+		<value>0.0.0.0</value>
+	</property>
+	<property>
 		<name>yarn.nodemanager.webapp.address</name>
 		<value><%= @web_ui_host%>:<%= @web_ui_port%></value>
 	</property>
+	<!-- <property>
+		<name>yarn.nodemanager.local-dirs</name>
+		<value></value>
+	</property>
+	<property>
+		<name>yarn.timeline-service.leveldb-timeline-store.path</name>
+		<value></value>
+	</property>
+	<property>
+		<name>yarn.timeline-service.leveldb-state-store.path</name>
+		<value></value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.leveldb-state-store.path</name>
+		<value></value>
+	</property> -->
 </configuration>
