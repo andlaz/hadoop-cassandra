@@ -178,8 +178,9 @@ class Configure < Thor
     configuration.default_fs = "hdfs://#{options[:name_node]}:#{options[:name_node_port]}"
     configuration.name_node = options[:name_node]
     configuration.name_node_port = options[:name_node_port]
-    File.write '/etc/hadoop/core-site.xml',
-      configuration.render_from('/etc/hadoop/core-site.xml.erb')
+      
+    File.write '/etc/hadoop/hdfs-site.xml',
+      configuration.render_from('/etc/hadoop/hdfs-site.xml.erb')
       
     File.write '/etc/supervisor/conf.d/datanode.conf',
       configuration.render_from('/etc/supervisor/conf.d/datanode.conf.erb')
