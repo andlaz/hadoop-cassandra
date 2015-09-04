@@ -181,9 +181,6 @@ class Configure < Thor
     File.write '/etc/hadoop/core-site.xml',
       configuration.render_from('/etc/hadoop/core-site.xml.erb')
       
-    File.write '/etc/hadoop/hdfs-site.xml',
-      configuration.render_from('/etc/hadoop/hdfs-site.xml.erb')
-      
     File.write '/etc/supervisor/conf.d/datanode.conf',
       configuration.render_from('/etc/supervisor/conf.d/datanode.conf.erb')
     
