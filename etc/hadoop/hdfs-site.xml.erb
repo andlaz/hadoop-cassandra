@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<configuration>
+	<!-- Data node daemon -->
+	<property>
+		<name>dfs.namenode.rpc-address</name>
+		<value><%= @name_node %>:<%= @name_node_port %>
+	</property>
+	<property>
+		<name>dfs.datanode.data.dir</name>
+		<value><%= @data_dir %></value>
+	</property>
+	<property>
+		<name>dfs.webhdfs.enabled</name>
+		<value>true</value>
+	</property>
+</configuration>
