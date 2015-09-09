@@ -154,16 +154,16 @@ class Configure < Thor
     File.write '/etc/supervisor/conf.d/cassandra.conf',
       configuration.render_from('/etc/supervisor/conf.d/cassandra.conf.erb')
     
-    `chown -R hadoop #{options[:commit_log_dir]}`
-    `chown -R hadoop #{options[:saved_caches_dir]}`
+    `chown -R cassandra #{options[:commit_log_dir]}`
+    `chown -R cassandra #{options[:saved_caches_dir]}`
     
     configuration.data_dirs.each do |data_dir| 
       
-      `chown -R hadoop #{data_dir}`
+      `chown -R cassandra #{data_dir}`
     
     end
     
-    `chown -R hadoop /var/log/cassandra`
+    `chown -R cassandra /var/log/cassandra`
      
   end
   
