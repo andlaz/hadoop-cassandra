@@ -38,7 +38,9 @@ class Configure < Thor
       :broadcast_address,
       :seeds,
       :dc,
-      :rack
+      :rack,
+      :opscenter_host,
+      :opscenter_port
 
   end
   
@@ -78,7 +80,8 @@ class Configure < Thor
     :broadcast_address => {:desc => "Address to broadcast to other Cassandra nodes. Leaving this blank will set it to the same value as listen_address"},
     :seeds => {:required => true, :desc => "Seed node/s"},
     :dc => {:required => true, :desc => "Name of the Cassandra DC the node will join"},
-    :rack => {:default => "rack1", :desc => "Name of the Rack in the Cassandra DC the node sits on"}
+    :rack => {:default => "rack1", :desc => "Name of the Rack in the Cassandra DC the node sits on"},
+    :opscenter => {:desc => "ip:host of the OpsCenter server. If left empty, datastax-agent will not be configured and started"}
   }
   
   @@datanode_options = {
@@ -124,6 +127,10 @@ class Configure < Thor
     configuration.seeds = options[:seeds]
     configuration.dc = options[:dc]
     configuration.rack = options[:rack]
+    if options[:opscenter].present?
+      configuration.opscenter_host = (options[:opscenter].split ':')[0]
+      configuration.opscenter_port = ((options[:opscenter].split ':')[1]).to_i
+    end
     
     # check if we can get to an initial_token
     
@@ -153,6 +160,10 @@ class Configure < Thor
       
     File.write '/etc/supervisor/conf.d/cassandra.conf',
       configuration.render_from('/etc/supervisor/conf.d/cassandra.conf.erb')
+    
+    if configuration.opscenter_host.nil? == false && configuration.opscenter_port.nil? == false
+      File.write '/etc/datastax-agent/address.yaml',
+        configuration.render_from('/etc/datastax-agent/address.yaml.erb')    
     
     `chown -R cassandra #{options[:commit_log_dir]}`
     `chown -R cassandra #{options[:saved_caches_dir]}`
