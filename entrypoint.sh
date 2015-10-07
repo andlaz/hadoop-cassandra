@@ -21,6 +21,7 @@ add_cassandra_options () {
 	if [ $HOSTNAME ] && [[ $* != *"--listen-address"* ]]; then opts="$opts --listen-address $HOSTNAME"; fi
 	# if --rpc-address is not set, set it to $HOSTNAME
 	if [ $HOSTNAME ] && [[ $* != *"--rpc-address"* ]]; then opts="$opts --rpc-address $HOSTNAME"; fi
+	if [ $OPSCENTER_NAME ] && [[ $* != *"--opscenter"* ]]; then opts="$opts --opscenter opscenter:61620"; fi
 	
 	echo $opts
 }
