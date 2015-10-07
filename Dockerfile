@@ -19,7 +19,7 @@ ADD etc/datastax-agent/* /etc/datastax-agent/
 
 ADD http://downloads.datastax.com/community/datastax-agent-5.2.1.tar.gz /opt/
 RUN cd /opt && tar xf datastax-agent-5.2.1.tar.gz && rm datastax-agent-5.2.1.tar.gz
-RUN rm -f /opt/datastax-agent-5.2.1/conf && ln -s /etc/datastax-agent /opt/datastax-agent-5.2.1/conf
+RUN rm -fR /opt/datastax-agent-5.2.1/conf && ln -s /etc/datastax-agent /opt/datastax-agent-5.2.1/conf
 
 RUN rm -f /etc/security/limits.d/cassandra.conf
 
