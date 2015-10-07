@@ -127,7 +127,7 @@ class Configure < Thor
     configuration.seeds = options[:seeds]
     configuration.dc = options[:dc]
     configuration.rack = options[:rack]
-    if options[:opscenter].present?
+    if options[:opscenter].nil? == false
       configuration.opscenter_host = (options[:opscenter].split ':')[0]
       configuration.opscenter_port = ((options[:opscenter].split ':')[1]).to_i
     end
@@ -163,7 +163,11 @@ class Configure < Thor
     
     if configuration.opscenter_host.nil? == false && configuration.opscenter_port.nil? == false
       File.write '/etc/datastax-agent/address.yaml',
-        configuration.render_from('/etc/datastax-agent/address.yaml.erb')    
+        configuration.render_from('/etc/datastax-agent/address.yaml.erb')  
+        
+      File.write '/etc/supervisor/conf.d/datastax-agent.conf',
+        configuration.render_from('/etc/supervisor/conf.d/datastax-agent.conf.erb')          
+    end
     
     `chown -R cassandra #{options[:commit_log_dir]}`
     `chown -R cassandra #{options[:saved_caches_dir]}`
